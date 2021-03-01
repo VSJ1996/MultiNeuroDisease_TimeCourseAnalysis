@@ -28,8 +28,3 @@ normalized_counts <- counts(data, normalized=TRUE)
 
 #Export normalized data
 write.table(normalized_counts, file="/Users/ven/Documents/PhD/Rotation Botas Lab/Data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
-
-#Export counts data
-write.table(normalized_counts, file="/Users/ven/Documents/PhD/Rotation Botas Lab/Data/counts.txt", sep="\t", quote=F, col.names=NA)
-
-
