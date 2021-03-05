@@ -267,11 +267,11 @@ normalized_counts <- normalized_counts[,col_order]
 #Time course expression analysis
 design = make.design.matrix(edesign=edesign, degree=4)
 
-fit <- p.vector(data=normalized_counts, design, counts=TRUE)
+fit <- p.vector(data=normalized_counts, design, counts=TRUE, Q = 0.01)
 fit$i # returns the number of significant genes
 SELEC_DF <- fit$SELEC # is a matrix with the significant genes and their expression values
 
-tstep <- T.fit2(fit, step.method = "forward", alfa = 0.05)
+tstep <- T.fit2(fit, step.method = "forward", alfa = 0.01)
 #saveRDS("tstep", file = "/Users/ven/Documents/PhD/Rotation Botas Lab/Results/tstep_object_HD128vs200vsControl_counts=true")
 
 sigs <- get.siggenes(tstep, rsq = 0.6, vars = "groups")
@@ -281,7 +281,6 @@ sigs2 <- get.siggenes(tstep, rsq = 0.6, vars = "all")
 
 sigs3 <- get.siggenes(tstep, rsq = 0.6, vars = "each")
 
-##Generate and visualize results
 #Visualize a Venn diagram and create a list of completely intersected genes between groups
 names(sigs$summary)
 VennDataFrame = suma2Venn(sigs$summary[, c(2:6)])
@@ -295,9 +294,14 @@ for (d in full_intersection_list){
   intersectionData <- rbind (intersectionData, x)
 }
 
+saveRDS("intersectionData", file = "/Users/ven/Documents/PhD/Rotation Botas Lab/Data/intersectionData_object_259DEGs")
+textme()
+
+
 #Visualize the consistency of the clusters and show clearly the differences between groups
 results = see.genes(intersectionData, edesign = edesign, show.fit = F, dis =design$dis,
-          cluster.method="Mclust" ,cluster.data = 1, k = 4)
+          cluster.method="Mclust" ,cluster.data = 1, k = 9)
+saveRDS("results", file = "/Users/ven/Documents/PhD/Rotation Botas Lab/Data/results_object_259DEGs")
 
 #Export results (Venn Diagram, cluster consistency, and group differences) as PDF
 for(d in dev.list()) {
@@ -307,4 +311,4 @@ for(d in dev.list()) {
   dev.off()
 }
 
-textme()
+cluster_results = results[["cut"]]
